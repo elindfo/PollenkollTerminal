@@ -8,6 +8,9 @@ from bs4 import BeautifulSoup
 
 BASE_URL = 'https://www.klart.se/se/pollenprognoser/stationer/'
 
+parser = argparse.ArgumentParser()
+parser.add_argument('city')
+args = parser.parse_args()
 
 def get_information(url):
     response = requests.get(url)
@@ -60,16 +63,14 @@ class MyGrid(npyscreen.GridColTitles):
 
 class Pollenkoll(npyscreen.NPSApp):
     def main(self):
-        parser = argparse.ArgumentParser()
-        parser.add_argument('city')
-        args = parser.parse_args()
-        if args.city:
-            pollen_information = get_information(BASE_URL + args.city)
-            display_information(args.city, pollen_information)
-        else:
-            sys.exit(0)
+        pollen_information = get_information(BASE_URL + args.city)
+        display_information(args.city, pollen_information)
 
 
 if __name__ == '__main__':
-    App = Pollenkoll()
-    App.run()
+    if args.city:
+        App = Pollenkoll()
+        App.run()
+    else:
+        sys.exit(0)
+
